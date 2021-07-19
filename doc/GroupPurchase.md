@@ -84,9 +84,9 @@ Apply cascade rounding to the list of amounts:
     IV = integer value         = round(DT(i)) - IT(i-1)
     i      DV    DT     IT    IV
     0     --     0.0     0    0
-    1    3.33    3.33    3    3
-    2    3.33    6.66    7    4   (because round(6.66)-3 = 7-3 = 4) 
-    3    3.33    9.99   10    3   (because round(9.99)-7 = 10-3 = 3) 
+    1    3.33.. 3.33..   3    3
+    2    3.33.. 6.66..   7    4   // round(6.66666)-3 = 7-3 = 4) 
+    3    3.33.. 9.99..  10    3   // round(9.99999)-7 = 10-3 = 3) 
 
 
 ## 5 On a buyer's birthday the shipping part for this buyer is zero, it's distributed amongst other buyers
