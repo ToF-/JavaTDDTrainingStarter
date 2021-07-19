@@ -49,49 +49,74 @@ Note that the amounts are rounded and adjusted so that their sum is equal to the
 
 ## 3 Given a list of orders for several buyers and a shipping fee, the shipping is being distributed proportionally to each buyer's amount
 
-SHIPPING FEE = 10.0
-ORDER                                    |     BILL w/o shippin  |  with shipping
-item          unit price  qty buyer      |   amount  buyer       |  amount
------------------------------------------+----------------------------------------
-pencils             0.50  20  Bertrand   |  18.0    Bertrand     |  23.45
-gift cards          8.00   1  Bertrand   |                       |
-paper               1.50  10  Clara      |  15.0    Clara        |  19.55
+    SHIPPING FEE = 10.0
+    ORDER                                    |     BILL w/o shippin  |  with shipping
+    item          unit price  qty buyer      |   amount  buyer       |  amount
+    -----------------------------------------+----------------------------------------
+    pencils             0.50  20  Bertrand   |  18.0    Bertrand     |  23.45
+    gift cards          8.00   1  Bertrand   |                       |
+    paper               1.50  10  Clara      |  15.0    Clara        |  19.55
 
-Total w/o shipping = 33.0
-Bertrand's part of shipping = 18.0/33.0 * 10.0 = 5.45
-Clara's part of shipping =    15.0/33.0 * 10.0 = 4.55
-Grand total = 33.0 + 10 = 43.0
+    Total w/o shipping = 33.0
+    Bertrand's part of shipping = 18.0/33.0 * 10.0 = 5.45
+    Clara's part of shipping =    15.0/33.0 * 10.0 = 4.55
+    Grand total = 33.0 + 10 = 43.0
 
 ## 4 Given a distribution of the shipping fee, the sum of each buyers amount should equal the grand total
-SHIPPING FEE = 1.0
-ORDER                                    |     BILL w/o shippin  |  with shipping
-item          unit price  qty buyer      |   amount  buyer       |  amount
------------------------------------------+----------------------------------------
-some item           33.0   1  Bertrand   |  33.0    Bertrand     |  33.33
-some item           33.0   1  Alice      |  33.0    Alice        |  33.34
-some item           33.0   1  Clara      |  33.0    Clara        |  33.33
 
-Total w/o shipping = 99.0
-each buyer's part of shipping = 33.0/99.0 * 1 = 0.333333333...
-grand total = 100
+    SHIPPING FEE = 1.0
+    ORDER                                    |     BILL w/o shippin  |  with shipping
+    item          unit price  qty buyer      |   amount  buyer       |  amount
+    -----------------------------------------+----------------------------------------
+    some item           33.0   1  Bertrand   |  33.0    Bertrand     |  33.33
+    some item           33.0   1  Alice      |  33.0    Alice        |  33.34
+    some item           33.0   1  Clara      |  33.0    Clara        |  33.33
 
-apply cascade rounding to the list of amounts
+    Total w/o shipping = 99.0
+    each buyer's part of shipping = 33.0/99.0 * 1 = 0.333333333...
+    grand total = 100
 
-## 5 On a buyer's birthday the shipping part for this buyer is zero, the shipping fee is offered for this buyer
+Apply cascade rounding to the list of amounts:
+           
+    DV = double value
+    DT = double running total  = DT(i-1) + DV(i)
+    IT = integer running total = IT(i-1) + IV(i)
+    IV = integer value         = round(DT(i)) - IT(i-1)
+    i      DV    DT     IT    IV
+    0     --     0.0     0    0
+    1    3.33    3.33    3    3
+    2    3.33    6.66    7    4   (because round(6.66)-3 = 7-3 = 4) 
+    3    3.33    9.99   10    3   (because round(9.99)-7 = 10-3 = 3) 
 
-SHIPPING FEE = 10.0
-ORDER                                    |     BILL w/o shippin  |  with shipping
-item          unit price  qty buyer      |   amount  buyer       |  amount
------------------------------------------+----------------------------------------
-pencils             0.50  20  Bertrand   |  18.0    Bertrand     |  23.45
-gift cards          8.00   1  Bertrand   |                       |
-paper               1.50  10  Clara      |  15.0    Clara        |  15.00
 
-Bertrand's birthday is on the 23-Jan-1990
-Clara's birthday is on the 19-Jul-1989
-it is the 19-Jul
+## 5 On a buyer's birthday the shipping part for this buyer is zero, it's distributed amongst other buyers
 
-Bertrand's part of the shipping fee = his part, 5.45
-Clara's part of the shipping fee = 0.0 offered by the shop
-grand total is 23.45 + 15.00
+    SHIPPING FEE = 10.0
+
+    ORDER                                    |     BILL w/o shippin  |  with shipping
+    item          unit price  qty buyer      |   amount  buyer       |  amount
+    -----------------------------------------+----------------------------------------
+    pencils             0.50  20  Bertrand   |  18.0    Bertrand     |  22.81
+    gift cards          8.00   1  Bertrand   |                       |
+    paper               1.50  10  Clara      |  15.0    Clara        |  15.00
+    rubbers             1.00  20  Alice      |  20.0    Alice        |  25.19
+
+    Bertrand's birthday is on the 23-Jan-1990
+    Clara's birthday is on the 19-Jul-1989
+    Alice's birthday is on the 05-Mar-1991
+    it is the 19-Jul
+    total without shipping fee is 53.0
+    shipping fee is 10.0 
+    Bertrand's part of the shipping fee is 18.0 / 53.0 * 10.0   = 3.3962 
+    Alice's part of the shipping fee is 20.0 / 53.0 * 10.0      = 3.7735
+    Clara's part of the shipping fee should be 15.0 / 53 * 10.0 = 2.8301
+    But it's Clara's birthday so her part of the shipping fee is equally divided between other buyers (1.4150)
+    Thus Bertrand's total part is 22.81
+    Alice's total part is 25.19
+    Clara's total part is 15.00
+    grand total is 18.0 + 15.0 + 20.0 + 10.0 = 22.81 + 25.19 + 15.00 = 63.00
+    
+
+    
+
 
