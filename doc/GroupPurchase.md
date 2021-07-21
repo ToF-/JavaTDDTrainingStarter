@@ -49,6 +49,7 @@ Note that the amounts are rounded and adjusted so that their sum is equal to the
 
 ## 3 Given a list of orders for several buyers and a shipping fee, the shipping is being distributed proportionally to each buyer's amount
 
+```
 SHIPPING FEE = 10.0
 ORDER                                    |     BILL w/o shippin  |  with shipping
 item          unit price  qty buyer      |   amount  buyer       |  amount
@@ -61,8 +62,9 @@ Total w/o shipping = 33.0
 Bertrand's part of shipping = 18.0/33.0 * 10.0 = 5.45
 Clara's part of shipping =    15.0/33.0 * 10.0 = 4.55
 Grand total = 33.0 + 10 = 43.0
-
+```
 ## 4 Given a distribution of the shipping fee, the sum of each buyers amount should equal the grand total
+```
 SHIPPING FEE = 1.0
 ORDER                                    |     BILL w/o shippin  |  with shipping
 item          unit price  qty buyer      |   amount  buyer       |  amount
@@ -74,7 +76,7 @@ some item           33.0   1  Clara      |  33.0    Clara        |  33.33
 Total w/o shipping = 99.0
 each buyer's part of shipping = 33.0/99.0 * 1 = 0.333333333...
 grand total = 100
-
+```
 apply cascade rounding to the list of amounts
 
 ## 5 On a buyer's birthday the shipping part for this buyer is zero, the shipping fee is offered for this buyer
